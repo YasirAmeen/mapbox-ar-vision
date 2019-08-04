@@ -1,0 +1,41 @@
+buildscript {
+
+    if (file("${rootDir}/gradle/versions.gradle").exists()) {
+        apply from: "${rootDir}/gradle/versions.gradle"
+    }
+
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://mapbox.bintray.com/mapbox' }
+
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradle_plugin"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'io.fabric.tools:gradle:1.+'
+        classpath "de.mannodermaus.gradle.plugins:android-junit5:$mannodermaus_junit5_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://mapbox.bintray.com/mapbox' }
+
+        maven {
+            credentials {
+                username project.properties['mapboxMavenUser'] ?: "mapbox"
+                password project.properties['mapboxMavenToken'] ?: "sk.eyJ1IjoicnViaWtrdWJlIiwiYSI6ImNqeXd6a2hodTEybHQzYm40cXdrZ2M0dm0ifQ.M8iunHbtOk0BegzwxzqS9Q"
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+
+            url 'https://api.mapbox.com/downloads/v1/vision/android/maven'
+        }
+    }
+}
